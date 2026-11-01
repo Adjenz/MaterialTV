@@ -55,4 +55,7 @@ interface PlayerEngine {
     // Speed control
     fun setPlaybackSpeed(speed: Float) {}
     fun getPlaybackSpeed(): Float = 1.0f
+
+    // Aspect ratio / resize mode
+    fun setResizeMode(mode: Int) {}
 }

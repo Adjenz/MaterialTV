@@ -361,4 +361,21 @@ class LibMpvEngine : PlayerEngine {
         val speed = mpv?.getPropertyDouble("speed") ?: 1.0
         return speed.toFloat()
     }
+
+    override fun setResizeMode(mode: Int) {
+        when (mode) {
+            androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FILL -> {
+                mpv?.setPropertyString("keepaspect", "no")
+                mpv?.setPropertyDouble("panscan", 0.0)
+            }
+            androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM -> {
+                mpv?.setPropertyString("keepaspect", "yes")
+                mpv?.setPropertyDouble("panscan", 1.0)
+            }
+            else -> {
+                mpv?.setPropertyString("keepaspect", "yes")
+                mpv?.setPropertyDouble("panscan", 0.0)
+            }
+        }
+    }
 }

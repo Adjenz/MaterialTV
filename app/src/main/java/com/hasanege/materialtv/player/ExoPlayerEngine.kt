@@ -20,6 +20,7 @@ class ExoPlayerEngine : PlayerEngine {
     private var player: ExoPlayer? = null
     fun getExoPlayer(): ExoPlayer? = player
     private var playbackSpeed: Float = 1.0f
+    private var currentResizeMode: Int = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
     private var playerView: PlayerView? = null
     private var context: Context? = null
     private var currentContainer: ViewGroup? = null
@@ -219,7 +220,7 @@ class ExoPlayerEngine : PlayerEngine {
                 )
                 player = this@ExoPlayerEngine.player
                 useController = false // Disable default controls
-                resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
+                resizeMode = currentResizeMode
             }
             
             container.addView(playerView)
@@ -456,7 +457,8 @@ class ExoPlayerEngine : PlayerEngine {
      * Set resize mode for aspect ratio handling
      * @param mode: RESIZE_MODE_FIT, RESIZE_MODE_FILL, RESIZE_MODE_ZOOM, RESIZE_MODE_FIXED_WIDTH, RESIZE_MODE_FIXED_HEIGHT
      */
-    fun setResizeMode(mode: Int) {
+    override fun setResizeMode(mode: Int) {
+        currentResizeMode = mode
         playerView?.resizeMode = mode
     }
     

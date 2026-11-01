@@ -314,6 +314,7 @@ fun FullscreenPlayer(
                         }
                     },
                     update = { view ->
+                        engine.setResizeMode(resizeMode)
                         view.requestLayout()
                     },
                     modifier = Modifier.fillMaxSize()
@@ -483,6 +484,27 @@ fun FullscreenPlayer(
                                  Icon(
                                      imageVector = Icons.Default.ScreenRotation,
                                      contentDescription = "Ekranı Döndür",
+                                     tint = Color.White
+                                 )
+                             }
+
+                             // Aspect Ratio / Resize Mode Button
+                             IconButton(onClick = {
+                                 val (nextMode, label) = when (resizeMode) {
+                                     androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT ->
+                                         androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FILL to "Format : Étiré (Plein écran)"
+                                     androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FILL ->
+                                         androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM to "Format : Zoom (Recadré)"
+                                     else ->
+                                         androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT to "Format : Original (Fit)"
+                                 }
+                                 resizeMode = nextMode
+                                 engine.setResizeMode(nextMode)
+                                 android.widget.Toast.makeText(context, label, android.widget.Toast.LENGTH_SHORT).show()
+                             }) {
+                                 Icon(
+                                     imageVector = Icons.Default.AspectRatio,
+                                     contentDescription = "Aspect Ratio",
                                      tint = Color.White
                                  )
                              }
@@ -1225,6 +1247,26 @@ fun PlayerControlsOverlay(
                             Icon(
                                 imageVector = Icons.Default.Refresh,
                                 contentDescription = "Switch Engine",
+                                tint = Color.White
+                            )
+                        }
+
+                        IconButton(onClick = {
+                            val (nextMode, label) = when (resizeMode) {
+                                androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT ->
+                                    androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FILL to "Format : Étiré (Plein écran)"
+                                androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FILL ->
+                                    androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM to "Format : Zoom (Recadré)"
+                                else ->
+                                    androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT to "Format : Original (Fit)"
+                            }
+                            resizeMode = nextMode
+                            engine.setResizeMode(nextMode)
+                            android.widget.Toast.makeText(context, label, android.widget.Toast.LENGTH_SHORT).show()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.AspectRatio,
+                                contentDescription = "Aspect Ratio",
                                 tint = Color.White
                             )
                         }

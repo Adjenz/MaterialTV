@@ -22,6 +22,7 @@ class LibVlcEngine : PlayerEngine {
     private var isAttached: Boolean = false
     private var isBuffering: Boolean = false
     private var subtitleSizeScale: Int = 100
+    private var currentScaleType: MediaPlayer.ScaleType = MediaPlayer.ScaleType.SURFACE_BEST_FIT
 
     override fun initialize(context: Context) {
         this.context = context
@@ -39,7 +40,7 @@ class LibVlcEngine : PlayerEngine {
             libVlc = LibVLC(context, args)
             mediaPlayer = MediaPlayer(libVlc).apply {
                 // Set scale mode for proper aspect ratio
-                videoScale = MediaPlayer.ScaleType.SURFACE_BEST_FIT
+                videoScale = currentScaleType
                 
                 // Add event listener for error handling and playback monitoring
                 setEventListener { event ->
@@ -168,7 +169,7 @@ class LibVlcEngine : PlayerEngine {
                         mediaPlayer?.videoTrack = -1
                         mediaPlayer?.videoTrack = currentTrack
                     }
-                    mediaPlayer?.videoScale = MediaPlayer.ScaleType.SURFACE_BEST_FIT
+                    mediaPlayer?.videoScale = currentScaleType
                 }
             } catch (e: Exception) {
                 android.util.Log.e("LibVlcEngine", "Error refreshing video output: ${StringUtils.sanitizeUrl(e.message)}")
@@ -413,6 +414,19 @@ class LibVlcEngine : PlayerEngine {
         }
     }
     
+    override fun setResizeMode(mode: Int) {
+        try {
+            currentScaleType = when (mode) {
+                androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FILL -> MediaPlayer.ScaleType.SURFACE_FILL
+                androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM -> MediaPlayer.ScaleType.SURFACE_FIT_SCREEN
+                else -> MediaPlayer.ScaleType.SURFACE_BEST_FIT
+            }
+            mediaPlayer?.videoScale = currentScaleType
+        } catch (e: Exception) {
+            android.util.Log.e("LibVlcEngine", "Error setting resize mode: ${StringUtils.sanitizeUrl(e.message)}")
+        }
+    }
+
     /**
      * Set aspect ratio mode
      * @param mode: "best_fit", "fill", "16:9", "4:3", etc.
